@@ -1,0 +1,19 @@
+{
+  "root": true,
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "rules": {
+    "indent": ["error", 3],
+    "quotes": ["error", "single"],
+    "no-console": "error",
+    "no-extra-semi": "error",
+    "space-before-function-paren": ["error", "always"],
+    "space-in-parens": ["error", "never"]
+  }
+}
