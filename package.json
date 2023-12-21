@@ -4,7 +4,9 @@
   "description": "web app e2e autotest framework (playwright + ts)",
   "main": "index.js",
   "scripts": {
-    "test": "npx playwright test"
+    "test": "npx playwright test",
+    "lint": "eslint . --fix",
+    "print_rules": "eslint --print-config .eslintrc.json > result.json"
   },
   "keywords": [],
   "author": "",
