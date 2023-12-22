@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "npx playwright test",
-    "lint": "eslint . --fix",
-    "print_rules": "eslint --print-config .eslintrc.json > result.json"
+    "lint": "npx eslint . --fix --cache",
+    "print_rules": "npx eslint --print-config .eslintrc.json > result.json"
   },
   "keywords": [],
   "author": "",

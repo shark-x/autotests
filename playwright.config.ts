@@ -24,6 +24,7 @@ default:
 export default defineConfig({
    use: {
       /* Base URL to use in actions like `await page.goto('/')`. */
-      baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'https://demoqa.com/',
+      baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'https://app.todoist.com',
+      headless: false,
    },
 });
