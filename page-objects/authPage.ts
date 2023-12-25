@@ -1,6 +1,7 @@
-import { Locator, type Page } from '@playwright/test';
+import { type Locator, type Page } from '@playwright/test';
 import { BasePage, IPage, PageName, PagePath } from './basePage'
 import { TodayPage } from './todayPage';
+import { IUser } from '../types';
 
 export class AuthPage extends BasePage implements IAuthPage{
 
@@ -17,9 +18,9 @@ export class AuthPage extends BasePage implements IAuthPage{
       this.loginButton = this.page.locator('button[type=\'submit\']');
    }
 
-   async login (email: string, password: string) {
-      await this.emailInput.fill(email);
-      await this.passwordInput.fill(password);
+   async login (user:IUser) {
+      await this.emailInput.fill(user.email);
+      await this.passwordInput.fill(user.password);
       await this.loginButton.click();
       await this.page.waitForURL(`**${PagePath.Today}`);
       return new TodayPage(this.page);
@@ -31,5 +32,5 @@ interface IAuthPage extends IPage {
     readonly passwordInput: Locator;
     readonly loginButton: Locator;
 
-    login(email: string, password: string): Promise<TodayPage>
+    login (user:IUser): Promise<TodayPage>
 }
