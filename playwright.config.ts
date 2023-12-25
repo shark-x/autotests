@@ -22,6 +22,9 @@ default:
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
+   fullyParallel: false,
+   workers: 1,
+   reporter: 'html',
    use: {
       /* Base URL to use in actions like `await page.goto('/')`. */
       baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'https://app.todoist.com',
