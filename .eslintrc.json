@@ -15,5 +15,20 @@
     "no-extra-semi": "error",
     "space-before-function-paren": ["error", "always"],
     "space-in-parens": ["error", "never"]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "rules": {
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            "selector": "interface",
+            "format": ["PascalCase"],
+            "prefix": ["I"]
+          }
+        ]
+      }
+    }
+  ]
 }
