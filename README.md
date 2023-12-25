@@ -17,7 +17,7 @@ Example for Windows Powershell:
 ## Add your env file
 Create .env file. Set parameters with your values. Use the .env.example from this repo.
 
-## Projects scripts 
+## Project scripts 
 - Run tests.
 > npm test
 - Check and fix style code errors.
