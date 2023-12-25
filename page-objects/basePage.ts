@@ -5,7 +5,7 @@ export enum PageName {
     Auth = 'Sign in to your Todoist account',
     Today = 'Today – Todoist',
     Base = '',
-};
+}
 
 export enum PagePath {
     Auth = '/auth/login',
