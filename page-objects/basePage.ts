@@ -1,11 +1,11 @@
-import { type Page } from '@playwright/test'
+import { type Locator, type Page } from '@playwright/test'
 import { Sidebar } from './sidebar';
 
 export enum PageName {
     Auth = 'Sign in to your Todoist account',
-    Today = 'Today',
-    Base = ''
-}
+    Today = 'Today – Todoist',
+    Base = '',
+};
 
 export enum PagePath {
     Auth = '/auth/login',
@@ -13,20 +13,20 @@ export enum PagePath {
     Base = '/app',
 }
 
-
 export class BasePage implements IPage {
 
    readonly page: Page;
    readonly name: PageName;
    readonly path: PagePath;
-
+   readonly header: Locator;
    readonly sidebar: Sidebar;
 
    constructor (page:Page, name:PageName, path:PagePath=PagePath.Base) {
       this.page = page;
       this.name = name;
       this.path = path;
-      this.sidebar = new Sidebar(this.page.locator('[data-testid=\'app-sidebar-container\']'))
+      this.header = this.page.locator('[data-testid=\'view_header\']');
+      this.sidebar = new Sidebar(this.page.locator('[data-testid=\'app-sidebar-container\']'));
    }
 
    async goto () {
@@ -36,7 +36,7 @@ export class BasePage implements IPage {
    }
 
    async isOpen () {
-      return this.page.locator('.main-header', {hasText: this.name}).isVisible();
+      return this.name === await this.page.title()
    }
 }
 
