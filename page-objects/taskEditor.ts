@@ -1,4 +1,5 @@
-import {type Locator} from '@playwright/test';
+import { type Locator } from '@playwright/test';
+import { ITask } from '../types';
 
 export class TaskEditor implements ITaskEditor {
 
@@ -10,7 +11,7 @@ export class TaskEditor implements ITaskEditor {
    readonly reminders: Locator;
    readonly moreActionsButton: Locator;
    readonly selectProject: Locator;
-   readonly cancel: Locator;
+   readonly cancelButton: Locator;
    readonly addTaskButton: Locator;
 
    constructor (locator:Locator) {
@@ -22,15 +23,18 @@ export class TaskEditor implements ITaskEditor {
       this.reminders = this.taskEditor.locator('[aria-label=\'Add reminders\']');
       this.moreActionsButton = this.taskEditor.locator('[aria-label=\'More actions\']');
       this.selectProject = this.taskEditor.locator('[aria-label=\'Select a project\']')
-      this.cancel = this.taskEditor.locator('[aria-label=\'Cancel\']')
+      this.cancelButton = this.taskEditor.locator('[aria-label=\'Cancel\']')
       this.addTaskButton = this.taskEditor.locator('[data-testid=\'task-editor-submit-button\']');
    }
 
-   async addTask (name:string, description:string) {
-      await this.taskNameInput.fill(name);
-      await this.descriptionInput.fill(description);
+   async addTask (task:ITask, breakNextTaskCreation:boolean=true) {
+      await this.taskNameInput.fill(task.name);
+      await this.descriptionInput.fill(task.description);
       await this.addTaskButton.click();
-
+      if(breakNextTaskCreation){
+         await this.cancelButton.click();
+         await this.taskEditor.waitFor({state: 'hidden'})
+      }
    }
 }
 
@@ -43,8 +47,8 @@ interface ITaskEditor {
     readonly reminders: Locator;
     readonly moreActionsButton: Locator;
     readonly selectProject: Locator;
-    readonly cancel: Locator;
+    readonly cancelButton: Locator;
     readonly addTaskButton: Locator;
 
-    addTask(name:string, description:string): Promise<void>;
+    addTask(task:ITask): Promise<void>;
 }
