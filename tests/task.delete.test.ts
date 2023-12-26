@@ -1,26 +1,11 @@
-import { expect, test } from '@playwright/test';
-import { AuthPage } from '../page-objects/authPage';
-import { TodayPage } from '../page-objects/todayPage';
-import { IUser, ITask, ITasksList} from '../types';
-
-const user: IUser = {
-   email: process.env.EMAIL,
-   password: process.env.PASSWORD
-};
-
-const task: ITask = {
-   name: 'Test task name - delete',
-   description: 'Some description'
-};
+import { expect, test } from '../fixtures/setup';
+import { ITask, ITasksList} from '../types';
+import { DataGenerator } from '../utils/dataGenerator';
 
 let tasksList: ITasksList;
 
-test('Delete some task', async ({ page}) => {
-   const authPage = new AuthPage(page);
-   await authPage.goto();
-   await authPage.login(user);
-
-   const todayPage = new TodayPage(page);
+test('Delete some task', async ({ todayPage}) => {
+   const task: ITask = DataGenerator.getRandomTask();
    await todayPage.addTask(task);
 
    tasksList = await todayPage.getTasksList();
@@ -28,7 +13,7 @@ test('Delete some task', async ({ page}) => {
    expect(tasksList.items).toContain(lastTask)
 
    await todayPage.deleteTask(lastTask);
-   await todayPage.page.reload();
+
    tasksList = await todayPage.getTasksList();
    expect(tasksList.items).not.toContainEqual(lastTask);
 });

@@ -1,26 +1,11 @@
-import { expect, test } from '@playwright/test';
-import { AuthPage } from '../page-objects/authPage';
-import { TodayPage } from '../page-objects/todayPage';
-import { IUser, ITask } from '../types';
+import { expect, test } from '../fixtures/setup';
+import { ITask } from '../types';
+import { DataGenerator } from '../utils/dataGenerator';
 
-const user: IUser = {
-   email: process.env.EMAIL,
-   password: process.env.PASSWORD
-};
-
-const task: ITask = {
-   name: 'Test task name - create',
-   description: 'Some description'
-};
-
-test('Create simple task', async ({ page}) => {
-   const authPage = new AuthPage(page);
-   await authPage.goto();
-   await authPage.login(user);
-
-   const todayPage = new TodayPage(page);
+test('Create simple task', async ({ todayPage}) => {
    const tasksListBefore = await todayPage.getTasksList();
 
+   const task: ITask = DataGenerator.getRandomTask();
    await todayPage.addTask(task);
 
    const tasksListAfter = await todayPage.getTasksList();

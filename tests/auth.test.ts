@@ -1,5 +1,4 @@
-import { expect, test } from '@playwright/test';
-import { AuthPage } from '../page-objects/authPage';
+import { expect, test } from '../fixtures/setup';
 import { IUser } from '../types';
 
 const user: IUser = {
@@ -8,9 +7,7 @@ const user: IUser = {
    password: process.env.PASSWORD
 }
 
-test('Success login', async ({ page}) => {
-   const authPage = new AuthPage(page);
-   await authPage.goto();
+test('Success login', async ({ authPage}) => {
    const todayPage = await authPage.login(user);
    expect(await todayPage.sidebar.getAccountName()).toBe(user.name)
 });
