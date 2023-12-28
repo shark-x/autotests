@@ -1,5 +1,5 @@
 import { type Locator, type Page } from '@playwright/test';
-import { BasePage, IPage, PageName, PagePath } from './basePage'
+import { BasePage, IPage, PAGE_NAME, PAGE_PATH } from './basePage'
 import { TodayPage } from './todayPage';
 import { IUser } from '../types';
 
@@ -11,7 +11,7 @@ export class AuthPage extends BasePage implements IAuthPage{
    readonly loginButton: Locator;
 
    constructor (page:Page) {
-      super(page, PageName.Auth, PagePath.Auth);
+      super(page, PAGE_NAME.AUTH, PAGE_PATH.AUTH);
       this.page = page;
       this.emailInput = this.page.locator('input#element-0[type=\'email\']');
       this.passwordInput = this.page.locator('input#element-3[type=\'password\']');
@@ -22,7 +22,7 @@ export class AuthPage extends BasePage implements IAuthPage{
       await this.emailInput.fill(user.email);
       await this.passwordInput.fill(user.password);
       await this.loginButton.click();
-      await this.page.waitForURL(`**${PagePath.Today}`);
+      await this.page.waitForURL(`**${PAGE_PATH.TODAY}`);
       return new TodayPage(this.page);
    }
 }

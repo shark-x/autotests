@@ -47,24 +47,32 @@ interface ITasksListComponent {
 export class TasksListItemComponent implements ITasksListItemComponent{
 
    readonly task: Locator;
-   readonly id: Locator;
+   readonly dragTo: Locator;
+   readonly checkbox: Locator;
    readonly content: Locator;
    readonly description: Locator;
    readonly label: Locator;
-   readonly checkbox: Locator;
+   readonly dueDate: Locator;
    readonly project: Locator;
    readonly actionsPanel: Locator;
+   readonly editButton: Locator;
+   readonly dueDateButton: Locator;
+   readonly commentLink: Locator;
    readonly moreActionsButton: Locator;
 
    constructor (locator:Locator) {
       this.task = locator
+      this.dragTo = this.task.locator('[data-testid="task_list_item__drag_handle"]');
+      this.checkbox = this.task.getByRole('checkbox');
       this.content = this.task.locator('.task_content');
       this.description = this.task.locator('.task_content');
       this.label = this.task.locator('.simple_content');
-      this.checkbox = this.task.getByRole('checkbox');
+      this.dueDate = this.task.locator('span.date');
       this.project = this.task.locator('.task_list_item__project__label');
-
       this.actionsPanel = this.task.locator('.task_list_item__actions');
+      this.editButton = this.task.locator('button[aria-label=\'Edit\']');
+      this.dueDateButton = this.task.locator('button[aria-label=\'Due date\']');
+      this.commentLink = this.task.locator('a[aria-label=\'Comment\']');
       // Work on Task Item Component level!
       this.moreActionsButton = this.task.locator('[aria-label=\'More task actions\']');
    }
@@ -75,6 +83,7 @@ export class TasksListItemComponent implements ITasksListItemComponent{
       const description = await this.description.isVisible() ? await this.description.textContent() : null;
       const label = await this.label.isVisible() ? await this.label.textContent(): null;
       const priority = await this.getPriority();
+      const dueDate = await this.dueDateButton.isVisible() ? await this.dueDateButton.textContent(): null;
       const project : IProject = { name: await this.project.textContent() };
       // const reminders; // not available in free version
       // const location; // not available in free version
@@ -83,6 +92,7 @@ export class TasksListItemComponent implements ITasksListItemComponent{
          name: content,
          description: description,
          label: label,
+         dueDate: dueDate,
          priority: priority,
          project: project,
       }
@@ -106,6 +116,10 @@ export class TasksListItemComponent implements ITasksListItemComponent{
       }
    }
 
+   async done(){
+      await this.checkbox.click();
+   }
+
    async openMoreActionsModal (){
       await this.actionsPanel.hover();
       await this.moreActionsButton.click();
@@ -113,15 +127,21 @@ export class TasksListItemComponent implements ITasksListItemComponent{
 }
 
 interface ITasksListItemComponent {
-    readonly task: Locator;
-    readonly id: Locator;
-    readonly content: Locator;
-    readonly description: Locator;
-    readonly label: Locator;
-    readonly checkbox: Locator;
-    readonly project: Locator;
-    readonly actionsPanel: Locator;
-    readonly moreActionsButton: Locator;
+   readonly task: Locator;
+   readonly dragTo: Locator;
+   readonly checkbox: Locator;
+   readonly content: Locator;
+   readonly description: Locator;
+   readonly label: Locator;
+   readonly dueDate: Locator;
+   readonly project: Locator;
+   readonly actionsPanel: Locator;
+   readonly editButton: Locator;
+   readonly dueDateButton: Locator;
+   readonly commentLink: Locator;
+   readonly moreActionsButton: Locator;
 
-    get(): Promise<ITask>
+   get(): Promise<ITask>;
+   done(): Promise<void>;
+   openMoreActionsModal (): Promise<void>;
 }

@@ -9,7 +9,7 @@ export interface ITask {
     id?:string;
     name: string;
     description?: string;
-    dueDate?: Date;
+    dueDate?: Date | string;
     priority?: PRIORITY;
     reminders?: IReminders; // not available in free version
     label?: string | LABELS;

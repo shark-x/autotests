@@ -21,7 +21,7 @@ export class MoreActionsComponent implements IMoreActionsComponent {
       this.duplicate = this.moreActions.getByRole('menuitem', {name: 'Duplicate'});
       this.copyToLinkTask = this.moreActions.getByRole('menuitem', {name: 'Copy to link task'});
       // this.addExtensions = this.moreActions.getByRole('menuitem', {name: 'Add extensions'} );
-      this.deleteButton = this.moreActions.getByRole('menuitem', {name: 'Delete'})
+      this.deleteButton = this.moreActions.getByRole('menuitem', {name: 'Delete'});
    }
 
    async delete () {

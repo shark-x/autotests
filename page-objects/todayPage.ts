@@ -1,5 +1,5 @@
 import { type Locator, type Page } from '@playwright/test';
-import { BasePage, IPage, PageName, PagePath } from './basePage'
+import { BasePage, IPage, PAGE_NAME, PAGE_PATH, ALERT_MESSAGE } from './basePage'
 import { TaskEditor } from './taskEditor';
 import {ITask, ITasksList, VIEW} from '../types';
 import { TasksListComponent } from './tasksList';
@@ -23,7 +23,7 @@ export class TodayPage extends BasePage implements ITodayPage {
    readonly modalOverlay: ModalOverlayComponent;
 
    constructor (page:Page) {
-      super(page, PageName.Today, PagePath.Today);
+      super(page, PAGE_NAME.TODAY, PAGE_PATH.TODAY);
       this.page = page;
       this.view = VIEW.LIST
       this.title = this.page.locator('#agenda_view h1');
@@ -64,6 +64,13 @@ export class TodayPage extends BasePage implements ITodayPage {
       return await this.tasksList.get();
    }
 
+   async doneTask(task:Pick<ITask, 'id'>): Promise<void> {
+      await this.goto();
+      const taskItem =  this.tasksList.item(this.tasksList.taskLocatorById(task));
+      await taskItem.done();
+      await this.alert(ALERT_MESSAGE.TASK_COMPLETED).waitFor();
+   }
+
    async deleteTask (task:Pick<ITask, 'id'>) {
       await this.goto();
       if(await this.moreActionsComponentLocator.isVisible()){
@@ -71,7 +78,7 @@ export class TodayPage extends BasePage implements ITodayPage {
       }
       await this.tasksList.openMoreActionsModalOfTask(task);
       await this.moreActionsComponent.delete();
-      //await this.modalOverlay.submit();
+      await this.modalOverlay.submit();
    }
 }
 
@@ -92,5 +99,6 @@ interface ITodayPage extends IPage {
 
    addTask(task:ITask) : Promise<void>;
    getTasksList () : Promise<ITasksList>;
+   doneTask(task:Pick<ITask, 'id'>): Promise<void>
    deleteTask (task:Pick<ITask, 'id'>) : Promise<void>;
 }
