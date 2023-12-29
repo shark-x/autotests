@@ -29,6 +29,11 @@ export class TasksListComponent implements ITasksListComponent {
       return tasksList
    }
 
+   // return Task Element (not Task Data)
+   getTaskElement(task:Pick<ITask, 'id'>) {
+      return this.item(this.taskLocatorById(task));
+   }
+
    async openMoreActionsModalOfTask (task:Pick<ITask, 'id'>){
       const item = this.item(this.taskLocatorById(task));
       await item.openMoreActionsModal();
@@ -36,12 +41,13 @@ export class TasksListComponent implements ITasksListComponent {
 }
 
 interface ITasksListComponent {
-    readonly tasksList: Locator;
-    readonly tasksListItemLocator: Locator;
-    readonly item: (locator: Locator) => TasksListItemComponent;
-    readonly taskLocatorById: (taskId:Pick<ITask, 'id'>) => Locator;
+   readonly tasksList: Locator;
+   readonly tasksListItemLocator: Locator;
+   readonly item: (locator: Locator) => TasksListItemComponent;
+   readonly taskLocatorById: (taskId:Pick<ITask, 'id'>) => Locator;
 
-    get(): Promise<ITasksList>
+   get(): Promise<ITasksList>;
+   getTaskElement(task:Pick<ITask, 'id'>): TasksListItemComponent;
 }
 
 export class TasksListItemComponent implements ITasksListItemComponent{
@@ -65,7 +71,7 @@ export class TasksListItemComponent implements ITasksListItemComponent{
       this.dragTo = this.task.locator('[data-testid="task_list_item__drag_handle"]');
       this.checkbox = this.task.getByRole('checkbox');
       this.content = this.task.locator('.task_content');
-      this.description = this.task.locator('.task_content');
+      this.description = this.task.locator('.task_description');
       this.label = this.task.locator('.simple_content');
       this.dueDate = this.task.locator('span.date');
       this.project = this.task.locator('.task_list_item__project__label');
@@ -84,7 +90,7 @@ export class TasksListItemComponent implements ITasksListItemComponent{
       const label = await this.label.isVisible() ? await this.label.textContent(): null;
       const priority = await this.getPriority();
       const dueDate = await this.dueDateButton.isVisible() ? await this.dueDateButton.textContent(): null;
-      const project : IProject = { name: await this.project.textContent() };
+      const project : IProject = { name: await this.project.isVisible() ? await this.project.textContent(): null };
       // const reminders; // not available in free version
       // const location; // not available in free version
       return {
@@ -118,6 +124,11 @@ export class TasksListItemComponent implements ITasksListItemComponent{
 
    async done(){
       await this.checkbox.click();
+   }
+
+   async edit(){
+      await this.actionsPanel.hover();
+      await this.editButton.click();
    }
 
    async openMoreActionsModal (){

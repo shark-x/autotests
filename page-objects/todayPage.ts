@@ -44,25 +44,31 @@ export class TodayPage extends BasePage implements ITodayPage {
       return await super.isOpen();
    }
 
-   async addTask (task:ITask, breakNextTaskCreation:boolean=true){
+   async addTask (task:ITask){
       await this.goto();
       await this.addTaskButton.click();
       await this.taskEditorLocator.waitFor();
-      await this.taskEditor.addTask(task, breakNextTaskCreation);
+      await this.taskEditor.addTask(task);
    }
 
-   async getTasksList () {
+   async editTask (task:ITask) {
       await this.goto();
-      if (await this.emptyState.isVisible()) {
-         return {items:[], total:0}
-      }
-      return await this.tasksList.get();
+      const taskElement =  this.tasksList.getTaskElement(task);
+      await taskElement.edit();
+      await this.taskEditorLocator.waitFor();
+      await this.taskEditor.editTask(task);
+   }
+
+   async getTask(task:Pick<ITask, 'id'>): Promise<ITask> {
+      await this.goto();
+      const taskElement =  this.tasksList.getTaskElement(task);
+      return await taskElement.get();
    }
 
    async doneTask(task:Pick<ITask, 'id'>): Promise<void> {
       await this.goto();
-      const taskItem =  this.tasksList.item(this.tasksList.taskLocatorById(task));
-      await taskItem.done();
+      const taskElement =  this.tasksList.getTaskElement(task);
+      await taskElement.done();
       await this.alert(ALERT_MESSAGE.TASK_COMPLETED).waitFor();
    }
 
@@ -74,6 +80,14 @@ export class TodayPage extends BasePage implements ITodayPage {
       await this.tasksList.openMoreActionsModalOfTask(task);
       await this.moreActionsComponent.delete();
       await this.modalOverlay.submit();
+   }
+
+   async getTasksList () {
+      await this.goto();
+      if (await this.emptyState.isVisible()) {
+         return {items:[], total:0}
+      }
+      return await this.tasksList.get();
    }
 }
 
@@ -89,11 +103,12 @@ interface ITodayPage extends IPage {
    readonly tasksList: TasksListComponent;
    readonly moreActionsComponentLocator: Locator;
    readonly moreActionsComponent: MoreActionsComponent
-   readonly modalOverlayLocator: Locator;
-   readonly modalOverlay: ModalOverlayComponent;
 
-   addTask(task:ITask) : Promise<void>;
+   addTask(task:ITask):  Promise<void>;
+   editTask (task:ITask): Promise<void>;
+   getTask (task:Pick<ITask, 'id'>): Promise<ITask>;
+   doneTask(task:Pick<ITask, 'id'>): Promise<void>;
+   deleteTask (task:Pick<ITask, 'id'>): Promise<void>;
+
    getTasksList () : Promise<ITasksList>;
-   doneTask(task:Pick<ITask, 'id'>): Promise<void>
-   deleteTask (task:Pick<ITask, 'id'>) : Promise<void>;
 }

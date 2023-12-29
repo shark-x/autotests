@@ -13,6 +13,7 @@ export class TaskEditor implements ITaskEditor {
    readonly selectProject: Locator;
    readonly cancelButton: Locator;
    readonly addTaskButton: Locator;
+   readonly saveButton: Locator;
 
    constructor (locator:Locator) {
       this.taskEditor = locator
@@ -25,17 +26,26 @@ export class TaskEditor implements ITaskEditor {
       this.selectProject = this.taskEditor.locator('[aria-label=\'Select a project\']')
       this.cancelButton = this.taskEditor.locator('[aria-label=\'Cancel\']')
       this.addTaskButton = this.taskEditor.locator('[data-testid=\'task-editor-submit-button\']');
+      this.saveButton = this.addTaskButton;
    }
 
-   async addTask (task:ITask, breakNextTaskCreation:boolean=true) {
-      await this.taskNameInput.fill(task.name);
-      await this.descriptionInput.fill(task.description);
-      await this.addTaskButton.click();
-      if(breakNextTaskCreation){
-         await this.cancelButton.click();
-         await this.taskEditor.waitFor({state: 'hidden'})
-      }
+   async fillFields(task:ITask) {
+       await this.taskNameInput.fill(task.name);
+       await this.descriptionInput.fill(task.description);
    }
+
+   async addTask (task:ITask) {
+      await this.fillFields(task);
+      await this.addTaskButton.click();
+      await this.cancelButton.click();
+      await this.taskEditor.waitFor({state: 'hidden'})
+   }
+
+    async editTask (task:ITask) {
+        await this.fillFields(task);
+        await this.saveButton.click();
+        await this.taskEditor.waitFor({state: 'hidden'})
+    }
 }
 
 interface ITaskEditor {
