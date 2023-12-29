@@ -1,5 +1,6 @@
 import { type Locator, type Page } from '@playwright/test'
 import { Sidebar } from './sidebar';
+import { ModalOverlayComponent } from "./modalOverlay";
 
 export enum PAGE_NAME {
     AUTH = 'Sign in to your Todoist account',
