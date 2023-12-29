@@ -4,7 +4,6 @@ import { TaskEditor } from './taskEditor';
 import {ITask, ITasksList, VIEW} from '../types';
 import { TasksListComponent } from './tasksList';
 import { MoreActionsComponent } from './moreActions';
-import { ModalOverlayComponent } from './modalOverlay';
 
 export class TodayPage extends BasePage implements ITodayPage {
 
@@ -19,8 +18,6 @@ export class TodayPage extends BasePage implements ITodayPage {
    readonly tasksList: TasksListComponent;
    readonly moreActionsComponentLocator: Locator;
    readonly moreActionsComponent: MoreActionsComponent
-   readonly modalOverlayLocator: Locator;
-   readonly modalOverlay: ModalOverlayComponent;
 
    constructor (page:Page) {
       super(page, PAGE_NAME.TODAY, PAGE_PATH.TODAY);
@@ -37,8 +34,6 @@ export class TodayPage extends BasePage implements ITodayPage {
       // Work on Page Level, not on Task Item Component level!
       this.moreActionsComponentLocator = this.page.locator('[aria-label=\'task edit menu\']');
       this.moreActionsComponent = new MoreActionsComponent(this.moreActionsComponentLocator);
-      this.modalOverlayLocator = this.page.locator('[data-testid=\'modal-overlay\']');
-      this.modalOverlay = new ModalOverlayComponent(this.modalOverlayLocator);
    }
 
    async goto (){
