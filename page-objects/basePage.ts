@@ -19,12 +19,14 @@ export enum ALERT_MESSAGE {
 
 export class BasePage implements IPage {
 
-   readonly page: Page;
-   readonly name: PAGE_NAME;
-   readonly path: PAGE_PATH;
-   readonly header: Locator;
-   readonly sidebar: Sidebar;
-   readonly alert: (text:string) => Locator;
+    readonly page: Page;
+    readonly name: PAGE_NAME;
+    readonly path: PAGE_PATH;
+    readonly header: Locator;
+    readonly sidebar: Sidebar;
+    readonly modalOverlayLocator: Locator;
+    readonly modalOverlay: ModalOverlayComponent;
+    readonly alert: (text:string) => Locator;
 
    constructor (page:Page, name:PAGE_NAME, path:PAGE_PATH=PAGE_PATH.BASE) {
         this.page = page;
@@ -32,6 +34,8 @@ export class BasePage implements IPage {
         this.path = path;
         this.header = this.page.locator('[data-testid=\'view_header\']');
         this.sidebar = new Sidebar(this.page.locator('[data-testid=\'app-sidebar-container\']'));
+        this.modalOverlayLocator = this.page.locator('[data-testid=\'modal-overlay\']');
+        this.modalOverlay = new ModalOverlayComponent(this.modalOverlayLocator);
         this.alert = (text:string): Locator => { return this.page.getByText(`${text}`); };
    }
 
